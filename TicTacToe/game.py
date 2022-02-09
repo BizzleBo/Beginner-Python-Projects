@@ -1,35 +1,28 @@
-class TicTacToe:
+import math
+import time
+from player import HumanPlayer, RandomComputerPlayer
+
+
+class TicTacToe():
     def __init__(self):
-        self.board = [' ' for _ in range(9)] #we will use a single list to represent a 3x3 board
+        self.board = self.make_board() #we will use a single list to represent a 3x3 board
         self.current_winner = None #track current winner
+
+    @staticmethod
+    def make_board():
+        return [' ' for _ in range(9)]
 
     def print_board(self):
         #this is getting the rows
-        for row in [self.board[i*3:(i+1)*3] for i in range(3)]:
-            print('| ' + ' | '.join(row) + ' |')
-    
+        for row in [self.board[i*3:(i+1) * 3] for i in range(3)]:
+            print('| ' + ' | '.join(row) + ' |')    
+
     @staticmethod
     def print_board_nums():
         # 0 | 1 | 2 etc tells what number corresponds to what box
-        number_board = [[str(i) for i in range(j*3, (j+1)*3) for j in range (3)]]
+        number_board = [[str(i) for i in range(j*3, (j+1)*3)] for j in range(3)]
         for row in number_board:
             print('| ' + ' | '.join(row) + ' |')
-    def available_moves(self):
-        return [i for i, spot in enumerate(self.board) if spot == ' ']
-        
-        ## The entire for loop below is replaced by the single line above
-        
-        # moves = []
-        # for (i, spot) in enumerate(self.board):
-        #     # ['x', 'x', 'o'] --> [(0, 'x'), (1, 'x'), (2, 'o')]
-        #     if spot == ' ':
-        #         moves.append(i)
-        # return moves
-    def empty_squares(self):
-        return ' ' in self.board
-
-    def num_empty_squares(self):
-        return self.board.count(' ')
 
     def make_move(self, square, letter):
         # if valid move, then make the move (assign square to a letter)
@@ -58,8 +51,34 @@ class TicTacToe:
         #Finally, check diagonals
         # only needs to be done if square is an even number (0,2,4,6,8)
         # these are the only moves possible to win a diagonal
-        
+        if square % 2 == 0:
+            diagonal1 = [self.board[i] for i in [0, 4, 8]] # left to right diagonal
+            if all([spot == letter for spot in diagonal1]):
+                return True
+            diagonal2 = [self.board[i] for i in [2, 4, 6]] # right to left diagonal
+            if all([spot == letter for spot in diagonal2]):
+                return True
 
+    # if all checks fail, there's no winner
+        return False     
+
+    def empty_squares(self):
+        return ' ' in self.board
+
+    def num_empty_squares(self):
+        return self.board.count(' ')
+
+    def available_moves(self):
+        return [i for i, spot in enumerate(self.board) if spot == ' ']
+        
+        ## The entire for loop below is replaced by the single line above
+        
+        # moves = []
+        # for (i, spot) in enumerate(self.board):
+        #     # ['x', 'x', 'o'] --> [(0, 'x'), (1, 'x'), (2, 'o')]
+        #     if spot == ' ':
+        #         moves.append(i)
+        # return moves
 
 def play(game, x_player, o_player, print_game=True):
     #returns the winner of the game(by letter, either X or O) or None for Tie
@@ -92,5 +111,14 @@ def play(game, x_player, o_player, print_game=True):
             #after move, we need to alternate letters
             letter = 'O' if letter == 'X' else 'X'
 
-        if print_game:
-            print('It\'s a tie!)
+    # pause before computer responds
+    time.sleep(0.8)
+
+    if print_game:
+        print('It\'s a tie!')
+
+if __name__ == '__main__':
+    x_player = HumanPlayer('X')
+    o_player = RandomComputerPlayer('O')
+    t = TicTacToe()
+    play(t, x_player, o_player, print_game=True)
