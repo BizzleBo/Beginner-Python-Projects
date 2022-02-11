@@ -39,6 +39,7 @@ class Board:
 
             board[row][col] = '*' #plant bomb
             bombs_planted += 1
+        return board
 
     def assign_values_to_board(self):
         for r in range(self.dim_size):
@@ -137,7 +138,7 @@ class Board:
         str_len = int(len(string_rep) / self.dim_size)
         string_rep = indices_row + '-'*str_len + '\n' + string_rep + '-'*str_len
 
-        return 
+        return string_rep
 
 
 #play the game
@@ -159,7 +160,7 @@ def play(dim_size=10, num_bombs=10):
     
     while len(board.dug) < board.dim_size ** 2 - num_bombs:
         print(board)
-        user_input = re.split(',(\\s)*',input("Where would you like to dig? Input as row,col: ")) 
+        user_input = re.split(',(\\s)*', input("Where would you like to dig? Input as row,col: ")) 
         row, col = int(user_input[0]), int(user_input[-1])
         if row < 0 or row >= board.dim_size or col < 0 or col >= dim_size:
             print("Invalid location. Try again.")
